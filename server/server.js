@@ -7,9 +7,6 @@ const { RoomManager } = require('./rooms');
 const { DrawingStateManager } = require('./drawing-state');
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`🎨 Canvas server listening on port ${PORT}`);
-});
 
 const app = express();
 const server = http.createServer(app);
@@ -397,3 +394,7 @@ process.on('SIGINT', () => {
   
   wss.close(() => server.close(() => process.exit(0)));
 });
+server.listen(PORT, () => {
+  console.log(`🎨 Canvas server running on port ${PORT}`);
+});
+
