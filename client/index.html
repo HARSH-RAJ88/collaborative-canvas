@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaborative Canvas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <h1>🎨 Collaborative Canvas</h1>
+      <div class="room-info">
+        <span id="room-id">Room: --</span>
+        <span id="user-count">Users: 0</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Toolbar -->
+      <aside class="toolbar">
+        <div class="tool-group">
+          <h3>Tools</h3>
+          <button class="tool-btn active" data-tool="brush" title="Brush">
+            ✏️
+          </button>
+          <button class="tool-btn" data-tool="eraser" title="Eraser">
+            🧹
+          </button>
+          <button class="tool-btn" data-tool="line" title="Line">
+            📏
+          </button>
+          <button class="tool-btn" data-tool="rectangle" title="Rectangle">
+            ⬜
+          </button>
+          <button class="tool-btn" data-tool="circle" title="Circle">
+            ⭕
+          </button>
+        </div>
+
+        <div class="tool-group">
+          <h3>Color</h3>
+          <input type="color" id="color-picker" value="#000000">
+          <div class="color-presets">
+            <button class="color-btn" data-color="#000000" style="background: #000000;"></button>
+            <button class="color-btn" data-color="#ff0000" style="background: #ff0000;"></button>
+            <button class="color-btn" data-color="#00ff00" style="background: #00ff00;"></button>
+            <button class="color-btn" data-color="#0000ff" style="background: #0000ff;"></button>
+            <button class="color-btn" data-color="#ffff00" style="background: #ffff00;"></button>
+            <button class="color-btn" data-color="#ff00ff" style="background: #ff00ff;"></button>
+            <button class="color-btn" data-color="#00ffff" style="background: #00ffff;"></button>
+            <button class="color-btn" data-color="#ffffff" style="background: #ffffff;"></button>
+          </div>
+        </div>
+
+        <div class="tool-group">
+          <h3>Size</h3>
+          <input type="range" id="brush-size" min="1" max="50" value="5">
+          <span id="size-value">5px</span>
+        </div>
+
+        <div class="tool-group">
+          <h3>History</h3>
+          <button id="undo-btn" class="action-btn">↩️ Undo</button>
+          <button id="redo-btn" class="action-btn">↪️ Redo</button>
+        </div>
+
+        <div class="tool-group">
+          <h3>Actions</h3>
+          <button id="clear-btn" class="action-btn">🗑️ Clear</button>
+          <button id="download-btn" class="action-btn">💾 Save</button>
+        </div>
+      </aside>
+
+      <!-- Canvas Area -->
+      <div class="canvas-container">
+        <canvas id="canvas"></canvas>
+        <div id="cursors-layer"></div>
+      </div>
+    </main>
+
+    <!-- Unified Status Bar (Connection + Metrics) -->
+    <div id="status-bar" class="status-bar">
+      <div id="connection-status" class="connection-indicator disconnected">
+        <span class="status-dot"></span>
+        <span class="status-text">Disconnected</span>
+      </div>
+      <div class="status-divider"></div>
+      <div id="metrics-overlay" class="metrics-section hidden">
+        <div class="metric-item">
+          <span class="metric-label">FPS</span>
+          <span id="fps-value" class="metric-value">--</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">PING</span>
+          <span id="latency-value" class="metric-value">--</span>
+          <span class="metric-unit">ms</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room Join Modal -->
+    <div id="room-modal" class="modal">
+      <div class="modal-content">
+        <h2>Join Collaborative Canvas</h2>
+        <div class="input-group">
+          <label for="username">Your Name</label>
+          <input type="text" id="username" placeholder="Enter your name" maxlength="20">
+        </div>
+        <div class="input-group">
+          <label for="room-input">Room ID (leave empty to create new)</label>
+          <input type="text" id="room-input" placeholder="Enter room ID or leave empty">
+        </div>
+        <button id="join-btn" class="primary-btn">Join Canvas</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
