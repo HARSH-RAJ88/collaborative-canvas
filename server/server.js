@@ -11,8 +11,6 @@ server.listen(PORT, () => {
   console.log(`🎨 Canvas server listening on port ${PORT}`);
 });
 
-
-
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
