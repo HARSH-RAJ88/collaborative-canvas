@@ -7,9 +7,10 @@ const { RoomManager } = require('./rooms');
 const { DrawingStateManager } = require('./drawing-state');
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, HOST, () => {
-  console.log(`🎨 Canvas server at http://localhost:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`🎨 Canvas server listening on port ${PORT}`);
 });
+
 
 
 const app = express();
