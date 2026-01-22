@@ -367,8 +367,9 @@ const heartbeat = setInterval(() => {
 
 wss.on('close', () => clearInterval(heartbeat));
 
-server.listen(PORT, HOST, () => {
-  console.log(`🎨 Canvas server running on the port ${PORT}`);
+// FIXED: Removed the duplicate server.listen() call and fixed the HOST issue
+server.listen(PORT, () => {
+  console.log(`🎨 Canvas server running on port ${PORT}`);
 });
 
 process.on('SIGTERM', () => {
@@ -394,7 +395,3 @@ process.on('SIGINT', () => {
   
   wss.close(() => server.close(() => process.exit(0)));
 });
-server.listen(PORT, () => {
-  console.log(`🎨 Canvas server running on port ${PORT}`);
-});
-
