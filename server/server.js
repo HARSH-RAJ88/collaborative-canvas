@@ -7,6 +7,7 @@ const { RoomManager } = require('./rooms');
 const { DrawingStateManager } = require('./drawing-state');
 
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 const app = express();
 const server = http.createServer(app);
@@ -15,7 +16,17 @@ const wss = new WebSocket.Server({ server });
 const roomManager = new RoomManager();
 const drawingStateManager = new DrawingStateManager();
 
+// Middleware for general error handling
+app.use((err, req, res, next) => {
+  console.error("Error encountered:", err.message);
+  res.status(500).json({ error: "Server Error" });
+});
+
 app.use(express.static(path.join(__dirname, '../client')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+});
 
 app.get('/health', (req, res) => {
   res.json({
@@ -367,9 +378,15 @@ const heartbeat = setInterval(() => {
 
 wss.on('close', () => clearInterval(heartbeat));
 
-server.listen(PORT, HOST, () => {
-  console.log(`🎨 Canvas server running on the port ${PORT}`);
-});
+// Start the server with error handling
+try {
+  server.listen(PORT, HOST, () => {
+    console.log(`🎨 Canvas server running at http://${HOST}:${PORT}`);
+  });
+} catch (error) {
+  console.error(`Failed to start server: ${error.message}`);
+  process.exit(1);
+}
 
 process.on('SIGTERM', () => {
   console.log('Shutting down gracefully...');
@@ -393,8 +410,5 @@ process.on('SIGINT', () => {
   });
   
   wss.close(() => server.close(() => process.exit(0)));
-});
-server.listen(PORT, () => {
-  console.log(`🎨 Canvas server running on port ${PORT}`);
 });
 
