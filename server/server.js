@@ -365,6 +365,7 @@ function isValidDrawData(data) {
 app.use((err, req, res, next) => {
   console.error("Error encountered:", err.message);
   res.status(500).json({ error: "Server Error" });
+  // Terminal error handler - no next() call as this is the final handler
 });
 
 // Kill dead connections every 30s
@@ -385,6 +386,7 @@ server.listen(PORT, HOST, () => {
 
 server.on('error', (error) => {
   console.error(`Failed to start server: ${error.message}`);
+  // Exit immediately as server cannot function without binding to port
   process.exit(1);
 });
 
