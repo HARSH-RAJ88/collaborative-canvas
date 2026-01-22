@@ -368,7 +368,7 @@ const heartbeat = setInterval(() => {
 wss.on('close', () => clearInterval(heartbeat));
 
 server.listen(PORT, HOST, () => {
-  console.log(`🎨 Canvas server at http://localhost:${PORT}`);
+  console.log(`🎨 Canvas server running on the port ${PORT}`);
 });
 
 process.on('SIGTERM', () => {
