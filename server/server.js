@@ -7,6 +7,7 @@ const { RoomManager } = require('./rooms');
 const { DrawingStateManager } = require('./drawing-state');
 
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 const app = express();
 const server = http.createServer(app);
@@ -16,6 +17,10 @@ const roomManager = new RoomManager();
 const drawingStateManager = new DrawingStateManager();
 
 app.use(express.static(path.join(__dirname, '../client')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+});
 
 app.get('/health', (req, res) => {
   res.json({
@@ -356,6 +361,13 @@ function isValidDrawData(data) {
   return true;
 }
 
+// Middleware for general error handling - must be after all routes
+app.use((err, req, res, next) => {
+  console.error("Error encountered:", err.message);
+  res.status(500).json({ error: "Server Error" });
+  // Terminal error handler - no next() call as this is the final handler
+});
+
 // Kill dead connections every 30s
 const heartbeat = setInterval(() => {
   wss.clients.forEach(ws => {
@@ -367,8 +379,15 @@ const heartbeat = setInterval(() => {
 
 wss.on('close', () => clearInterval(heartbeat));
 
+// Start the server with error handling
 server.listen(PORT, HOST, () => {
-  console.log(`🎨 Canvas server running on the port ${PORT}`);
+  console.log(`🎨 Canvas server running at http://${HOST}:${PORT}`);
+});
+
+server.on('error', (error) => {
+  console.error(`Failed to start server: ${error.message}`);
+  // Exit immediately as server cannot function without binding to port
+  process.exit(1);
 });
 
 process.on('SIGTERM', () => {
@@ -393,8 +412,5 @@ process.on('SIGINT', () => {
   });
   
   wss.close(() => server.close(() => process.exit(0)));
-});
-server.listen(PORT, () => {
-  console.log(`🎨 Canvas server running on port ${PORT}`);
 });
 
