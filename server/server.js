@@ -16,12 +16,6 @@ const wss = new WebSocket.Server({ server });
 const roomManager = new RoomManager();
 const drawingStateManager = new DrawingStateManager();
 
-// Middleware for general error handling
-app.use((err, req, res, next) => {
-  console.error("Error encountered:", err.message);
-  res.status(500).json({ error: "Server Error" });
-});
-
 app.use(express.static(path.join(__dirname, '../client')));
 
 app.get('/', (req, res) => {
@@ -367,6 +361,12 @@ function isValidDrawData(data) {
   return true;
 }
 
+// Middleware for general error handling - must be after all routes
+app.use((err, req, res, next) => {
+  console.error("Error encountered:", err.message);
+  res.status(500).json({ error: "Server Error" });
+});
+
 // Kill dead connections every 30s
 const heartbeat = setInterval(() => {
   wss.clients.forEach(ws => {
@@ -379,14 +379,14 @@ const heartbeat = setInterval(() => {
 wss.on('close', () => clearInterval(heartbeat));
 
 // Start the server with error handling
-try {
-  server.listen(PORT, HOST, () => {
-    console.log(`🎨 Canvas server running at http://${HOST}:${PORT}`);
-  });
-} catch (error) {
+server.listen(PORT, HOST, () => {
+  console.log(`🎨 Canvas server running at http://${HOST}:${PORT}`);
+});
+
+server.on('error', (error) => {
   console.error(`Failed to start server: ${error.message}`);
   process.exit(1);
-}
+});
 
 process.on('SIGTERM', () => {
   console.log('Shutting down gracefully...');
